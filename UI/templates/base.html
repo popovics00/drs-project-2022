@@ -28,9 +28,10 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+          <a class="nav-item nav-link" id="logout">Logout</a>
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
-          <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+          <a class="nav-item nav-link" id="sign_up" href="/sign-up">Sign Up</a>
+          <a class="nav-item nav-link" id="user_stats" href="/user-stats">User Stats</a>
         </div>
       </div>
     </nav>
@@ -52,6 +53,29 @@
       crossorigin="anonymous"></script>
       <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.2.js') }}"></script>
 
+      <script>
+        $(window).on('load', function() {
+          $( "#logout" ).click(function() {
+            sessionStorage.removeItem("current_user_id");
+            location.reload()
+            windows.location.href = "/"
+          });
+
+          if(sessionStorage.getItem("current_user_id") === null){
+            document.getElementById('user_stats').style.display = "none";
+            document.getElementById('logout').style.display = "none";
+            document.getElementById('login').style.display = "block";
+            document.getElementById('sign_up').style.display = "block";
+  
+          }
+          else{
+            document.getElementById('user_stats').style.display = "block";
+            document.getElementById('logout').style.display = "block";
+            document.getElementById('login').style.display = "none";
+            document.getElementById('sign_up').style.display = "none";
+          }
+         });
+      </script>
       {% block script%}
       {% endblock %}
   </body>

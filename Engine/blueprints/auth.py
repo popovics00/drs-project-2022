@@ -7,7 +7,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods=['POST'])
 def login():
-    user_logged_in = False
+    user_logged_in = None
     email = request.form.get('email')
     password = request.form.get('password')
     
@@ -15,7 +15,7 @@ def login():
     if existing_user:
          if check_password_hash(existing_user.password, password):
              #korisnik postoji i uneta sifra je ista kao ona u bazi
-             user_logged_in = True
+             user_logged_in = existing_user.id
     return jsonify(user_logged_in)
 
 @auth.route('/sign-up', methods=['POST'])

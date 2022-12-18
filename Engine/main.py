@@ -1,9 +1,11 @@
 from flask import Flask
 from blueprints.auth import auth
+from blueprints.user_stats import user_stats
 from flask_cors import CORS
 from db_config import *
 
 app.register_blueprint(auth)
+app.register_blueprint(user_stats)
 
 db.create_all(app=app)
 CORS(app)
