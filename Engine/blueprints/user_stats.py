@@ -27,10 +27,6 @@ def update_profile():
     country = request.form['country']
     phoneNumber = request.form['phoneNum']
     
-    print()
-    print(password)
-    print()
-    
     user = User.query.get(id)
     
     if password == "": #ako pass nije dodat onda uzimamo onaj koji se vec nalazi u korisniku
@@ -48,3 +44,19 @@ def update_profile():
     db.session.add(update_user)
     db.session.commit()
     return jsonify(update_user.as_dict())
+
+@user_stats.route('/verify-account', methods=["POST"])
+def verify():
+    id = request.form.get('userIdCard')
+    user = request.form.get('user')
+    card_num = request.form.get('cardNumber')
+    exp_date = request.form.get('expDate')
+    code = request.form.get('code')
+    
+    user_by_id = User.query.get(id)
+    user_by_id.verificated = True
+    user_by_id.nameOnCard = user
+    user_by_id.cardNumber = card_num
+    user_by_id.expDate = exp_date
+    db.session.commit()
+    return jsonify(user_by_id.as_dict())
