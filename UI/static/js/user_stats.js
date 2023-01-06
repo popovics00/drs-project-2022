@@ -95,3 +95,29 @@ $(document).ready(function () {
     });
 
 });
+
+$(document).ready(function () {
+    $.ajax({
+        url: 'http://127.0.0.1:5001/accountCrypto',
+        type: 'GET',
+        data: {
+            'id': sessionStorage.getItem('current_user_id')
+        },
+        success: function(response) {
+            var cryptolist = "";
+            console.log(response);
+
+            $.each(response, function(key, value){
+                console.log(value.name);
+                console.log(value);
+                cryptolist += '<tr class="table-dark">';
+                cryptolist += '<td class="table-info">' + value.cryptocurrency + '</td>';
+                cryptolist += '<td class="table-info">' + value.balance + '</td>';
+                cryptolist += '</tr>';
+            })
+
+            var x = document.getElementById('cryptotable');
+            x.innerHTML = cryptolist;
+        }
+    })
+})

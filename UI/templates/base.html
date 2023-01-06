@@ -30,6 +30,7 @@
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="logout">Logout</a>
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
+          <a class="nav-item nav-link" id="exchange" href="/exchange">Exchange</a>
           <a class="nav-item nav-link" id="sign_up" href="/sign-up">Sign Up</a>
           <a class="nav-item nav-link" id="user_stats" href="/user-stats">User Stats</a>
         </div>
@@ -47,11 +48,11 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
       integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
       crossorigin="anonymous"></script>
-    <script
+   <script
       src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"></script>
-      <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.2.js') }}"></script>
+   <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.2.js') }}"></script>
 
       <script>
         $(window).on('load', function() {
@@ -66,6 +67,7 @@
             document.getElementById('logout').style.display = "none";
             document.getElementById('login').style.display = "block";
             document.getElementById('sign_up').style.display = "block";
+            document.getElementById('exchange').style.display = "none";
   
           }
           else{
@@ -73,6 +75,7 @@
             document.getElementById('logout').style.display = "block";
             document.getElementById('login').style.display = "none";
             document.getElementById('sign_up').style.display = "none";
+            document.getElementById('exchange').style.display = "block";
           }
          });
       </script>

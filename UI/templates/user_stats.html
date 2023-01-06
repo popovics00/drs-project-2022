@@ -2,104 +2,119 @@
 
 {% block title%}User data{% endblock%}
 {% block content %}
-<form method="POST" class="float-left" id="edit">
-    <h1>User data</h1>
-    <input type="text" class="form-control" id="userId" name="userId" hidden>
-    <div class="form-row">
-        <div class="form-group col-md-4">
-            <label for = "firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name">
-        </div>
-        <div class="form-group col-md-5">
-            <label for = "lastName">Last Name</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
-        </div>
-    </div>
-    <div class="form-row">
-            <div class="form-group col-md-3">
-                <label for = "address">Address</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+<div class="row">
+    <form method="POST" class="float-left" id="edit">
+        <h1>User data</h1>
+        <input type="text" class="form-control" id="userId" name="userId" hidden>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for = "firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name">
             </div>
-            <div class="form-group col-md-3">
-                <label for = "city">City</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="Enter city">
+            <div class="form-group col-md-5">
+                <label for = "lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
             </div>
-            <div class="form-group col-md-3">
-                <label for = "country">Country</label>
-                <input type="text" class="form-control" id="country" name="country" placeholder="Enter country">
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for = "address">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for = "city">City</label>
+                    <input type="text" class="form-control" id="city" name="city" placeholder="Enter city">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for = "country">Country</label>
+                    <input type="text" class="form-control" id="country" name="country" placeholder="Enter country">
+                </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                <label for = "phoneNum">Phone number</label>
+                <input type="text" class="form-control" id="phoneNum" name="phoneNum" placeholder="Enter phone number">
             </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-9">
-            <label for = "phoneNum">Phone number</label>
-            <input type="text" class="form-control" id="phoneNum" name="phoneNum" placeholder="Enter phone number">
         </div>
-    </div>
-    <div class="form-row align-items-left mb-2">
-        <div class="form-group col-md-5">
-            <label for="email">Email Address</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"></div>
-        <div class="form-group col-md-4">
-            <label for = "password1">Password</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Change password">
+        <div class="form-row align-items-left mb-2">
+            <div class="form-group col-md-5">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"></div>
+            <div class="form-group col-md-4">
+                <label for = "password1">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Change password">
+            </div>
         </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-9">
-            <label for = "balance">Balance on online account</label>
-            <input type="number" class="form-control" id="balance" name="balance" readonly>
+        <div class="form-row">
+            <div class="form-group col-md-9">
+                <label for = "balance">Balance on online account</label>
+                <input type="number" class="form-control" id="balance" name="balance" readonly>
+            </div>
         </div>
-    </div>
-    <input type="submit" class="btn btn-primary" value="Edit"/>
-</form>
-<form method="POST" class="float-left" id="verification">
-    <h1>Credit card data</h1>
-    <input type="text" class="form-control" id="userIdCard" name="userIdCard" hidden>
-    <div class="form-group mb-3">
-        <label for = "user">Card's user</label>
-        <input type="text" class="form-control" id="user" name="user" placeholder="Enter user name">
-    </div>
-    <div class="form-group mb-3">
-        <label for = "cardNumber">Card number</label>
-        <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter card number">
-    </div>
-    
-    <div class="form-group mb-3">
-        <label for = "address">Expiry date</label>
-        <input type="text" class="form-control" id="expDate" name="expDate" placeholder="Enter expiry date"> 
-    </div>
-     
-    <div class="form-group mb-3">
-        <label for = "country">Safety code</label>
-        <input type="text" class="form-control" id="code" name="code" placeholder="Enter safety code">
-    </div>    
-    <input type="submit" class="btn btn-primary" id="btnVerify" value="Verify"/>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-        Deposit
-      </button>
-</form>
+        <input type="submit" class="btn btn-primary" value="Edit"/>
+    </form>
+    <form method="POST" class="float-left" id="verification">
+        <h1>Credit card data</h1>
+        <input type="text" class="form-control" id="userIdCard" name="userIdCard" hidden>
+        <div class="form-group mb-3">
+            <label for = "user">Card's user</label>
+            <input type="text" class="form-control" id="user" name="user" placeholder="Enter user name">
+        </div>
+        <div class="form-group mb-3">
+            <label for = "cardNumber">Card number</label>
+            <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="Enter card number">
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for = "address">Expiry date</label>
+            <input type="text" class="form-control" id="expDate" name="expDate" placeholder="Enter expiry date"> 
+        </div>
+        
+        <div class="form-group mb-3">
+            <label for = "country">Safety code</label>
+            <input type="text" class="form-control" id="code" name="code" placeholder="Enter safety code">
+        </div>    
+        <input type="submit" class="btn btn-primary" id="btnVerify" value="Verify"/>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Deposit
+        </button>
+    </form>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Adding money to account</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Adding money to account</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-icon">
+                    <input type="number" id="inputDeposit">
+                    <i>$</i>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnDeposit" data-toggle="modal" data-target="#exampleModal" data-dismiss="modal">Save</button>
+            </div>
         </div>
-        <div class="modal-body">
-            <div class="input-icon">
-                <input type="number" id="inputDeposit">
-                <i>$</i>
-              </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="btnDeposit" data-toggle="modal" data-target="#exampleModal" data-dismiss="modal">Save</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
+<br><br><br><br>
+<div class="row">
+<h3>Wallet</h3>
+<table  class="table"> 
+    <thead>
+        <th>Name</th>
+        <th>Count</th>
+    </thead>
+    <tbody id="cryptotable">
+
+    </tbody>
+    </table>  
+</div>
 {% endblock %}
 
 {% block script%}

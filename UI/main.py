@@ -20,5 +20,9 @@ def sign_up():
 def user_stats():
     return render_template('user_stats.html')
 
+@app.route('/exchange')
+def exchange():
+    return render_template('exchangeCrypto.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
