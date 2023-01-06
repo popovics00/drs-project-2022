@@ -10,29 +10,26 @@ crypto_bp = Blueprint('crypto', __name__)
 @crypto_bp.route('/getUserCryptos', methods=['GET'])
 def getUserCryptos():
     id = request.args.get("id")
-
     allUsersCryptos = Usercrypto.query.all()
     schema = UsercryptoSchema(many=True)
     myCripto = schema.dump(
-        filter(lambda t: t.id == id, allUsersCryptos)
+        filter(lambda t: t.userId == id, allUsersCryptos)
     )
-
     cryptoNames = [o['cryptocurrency'] for o in myCripto]
-
     return jsonify(cryptoNames)
+
 
 @crypto_bp.route('/accountCrypto', methods=['GET'])
 def accountCrypto():
     id = request.args.get("id")
-    user = User.query.get(id)
 
     allUsersCryptos = Usercrypto.query.all()
     schema = UsercryptoSchema(many=True)
     myCripto = schema.dump(
-        filter(lambda t: t.email == user.email, allUsersCryptos)
+        filter(lambda t: t.userId == id, allUsersCryptos)
     )
-
     return jsonify(myCripto)
+
 
 @crypto_bp.route('/cryptolist', methods=['GET'])
 def cryptolist():

@@ -42,7 +42,7 @@ def buycrypto():
         exists = False
 
         for cryptoAccount in cryptoAccounts:
-            if(cryptoAccount.email == buyer.email and cryptoAccount.cryptocurrency == crypto):
+            if(cryptoAccount.userId == buyer.id and cryptoAccount.cryptocurrency == crypto):
                 cryptoAccount.balance += float(amount)
                 db.session.add(cryptoAccount)
                 db.session.commit()
@@ -54,7 +54,7 @@ def buycrypto():
                 exists = True
 
         if(exists == False):
-            cryptoAccount = Usercrypto(email = buyer.email, cryptocurrency = crypto, balance = float(amount))
+            cryptoAccount = Usercrypto(userId = buyer.id, cryptocurrency = crypto, balance = float(amount))
             try:
                 db.session.add(cryptoAccount)
                 db.session.commit()  
@@ -74,3 +74,53 @@ def buycrypto():
         db.session.add(transaction)
         db.session.commit()
         return jsonify('Insufficient funds'), 200
+
+
+@transCrypto_bp.route('/confirmConversion', methods=['POST'])
+def confirmConversion():
+    id = request.form["id"]
+    myCrypto = request.form["myCrypto"]
+    allCryptos = request.form["allCryptos"]
+    inputConvertAmount = request.form["inputConvertAmount"]
+    cryptoValue = request.form["cryptoValue"]
+    myCryptoValue = request.form["myCryptoValue"]
+
+    allUsersCryptos = Usercrypto.query.all()
+    allMyCryptos = []
+    exist = False
+    for c in allUsersCryptos:
+        if(c.userId == id):
+            allMyCryptos.append(c)
+            if(c.cryptocurrency == myCrypto):
+                chosenMyCrypto = c
+            if(c.cryptocurrency == allCryptos):
+                chosenAnyCrypto = c
+                exist = True
+
+    if(chosenMyCrypto.balance < float(inputConvertAmount)):
+        return jsonify('Amount is too high! You have ' + chosenMyCrypto.balance + ' ' + myCrypto + '.')
+    
+    myCryptoUsd = float(inputConvertAmount) * float(myCryptoValue)
+    newCryptoAmount = myCryptoUsd / float(cryptoValue)
+
+    chosenMyCrypto.balance -= float(inputConvertAmount)
+    if(chosenMyCrypto.balance == 0):
+        db.session.delete(chosenMyCrypto)
+        db.session.commit()
+    else:
+        db.session.add(chosenMyCrypto)
+        db.session.commit()
+    
+    if(exist):
+        chosenAnyCrypto.balance += newCryptoAmount
+        db.session.add(chosenAnyCrypto)
+        db.session.commit()
+    else:
+        newCrypto = Usercrypto(userId = id, cryptocurrency = allCryptos, balance = float(newCryptoAmount))
+        try:
+            db.session.add(newCrypto)
+            db.session.commit()
+        except Exception as e:
+            return jsonify(e), 400
+
+    return jsonify("Convert succeded")
