@@ -5,8 +5,8 @@ import json
 from models.cryptocurrency import Cryptocurrency
 
 class Cryptotransaction(db.Model):
-    receiverEmail = db.Column(db.String(100), nullable = False, primary_key = True)
-    senderEmail = db.Column(db.String(100), nullable = False)
+    receiverId = db.Column(db.String(100), nullable = False, primary_key = True)
+    senderId = db.Column(db.String(100), nullable = False)
     cryptocurrency = db.Column(db.String(100), nullable = False, primary_key = True)
     amount = db.Column(db.Float(), nullable = False)
     price = db.Column(db.Float(), nullable=False)
@@ -19,8 +19,8 @@ class Cryptotransaction(db.Model):
         return '<Task %r' % self.id
     
     def to_json(self):
-      return dict(receiverEmail = self.receiverEmail,
-                  senderEmail = self.senderEmail,
+      return dict(receiverId = self.receiverId,
+                  senderId = self.senderId,
                   cryptocurrency = self.cryptocurrency,
                   amount = self.amount,
                   price = self.price,
@@ -30,8 +30,8 @@ class Cryptotransaction(db.Model):
                   status = self.status)
         
 class CryptotransactionSchema(Schema):
-    receiverEmail = fields.Str()
-    senderEmail = fields.Str()
+    receiverId = fields.Str()
+    senderId = fields.Str()
     cryptocurrency = fields.Str()
     amount = fields.Float()
     price = fields.Float()

@@ -102,7 +102,7 @@
         </div>
     </div>
 </div>
-<br><br><br><br>
+<br><br><br>
 <div class="row">
 <h3>Wallet</h3>
 <table  class="table"> 
@@ -115,6 +115,109 @@
     </tbody>
     </table>  
 </div>
+<br><br><br>
+<div class="row">
+    <h3>My transactions</h3>
+    <div style="overflow-x:auto;">
+        <table id="tableTransactions" class="table table table-striped" style="margin-bottom: 0%;">
+            <tr>
+              <th colspan="9" style="text-align: center; vertical-align: middle;">
+                My Transactions
+                <span style="float: right;">
+                  <button id="idFilterTransactions" class="btn btn-dark">Filter</button>
+                  <button id="idSortTransactions" class="btn btn-dark">Sort</button>
+                </span>
+              </th>
+            </tr>
+            <div id="divSort">
+                <tr id="trSort" style="display: none;">
+                  <td colspan="4"> 
+                    <label for="sortByValue">Sort by:</label>
+                    <input list="sortBy" id="sortByValue" name="sortByName" />
+                    <datalist id="sortBy">
+                      <option value="Amount">Amount</option>
+                      <option value="Price">Price</option>
+                      <option value="Total">Total</option>
+                      <option value="Date">Date</option>
+                    </datalist> 
+                  </td>
+                  <td colspan="4">
+                    <label for="sortAscDescValue">Asc/Desc</label>
+                    <input list="sortAscDesc" id="sortAscDescValue" name="sortAscDescName" />
+                    <datalist id="sortAscDesc">
+                      <option value="Ascending"></option>
+                      <option value="Descending"></option>
+                    </datalist> 
+                  </td>
+                  <td>
+                    <button id="buttonSortTransactions" class="btn btn-light">Sort</button>
+                  </td>
+                </tr>
+            </div>
+            <div id="divFilter">
+              <tr id="trFilter" style="display: none;">
+                <td> 
+                  <label for="filterCrypto">Crypto</label>
+                  <select id="filterCrypto" name="filterCrypto">
+    
+                  </select>
+                </td>
+                <td>
+                  <label for="filterAmountFrom">Amount from</label>
+                  <input type="number" id="filterAmountFrom" name="filterAmountFrom" />
+                  <br/>
+                  <label for="filterAmountTo">Amount to</label>
+                  <input type="number" id="filterAmountTo" name="filterAmountTo" />
+                </td>
+                <td>
+                  <label for="filterPriceFrom">Price from</label>
+                  <input type="number" id="filterPriceFrom" name="filterPriceFrom" />
+                  <br/>
+                  <label for="filterPriceTo">Price to</label>
+                  <input type="number" id="filterPriceTo" name="filterPriceTo" />
+                </td>
+                <td>
+                  <label for="filterTotalFrom">Total from</label>
+                  <input type="number" id="filterTotalFrom" name="filterTotalFrom" />
+                  <br/>
+                  <label for="filterTotalTo">Total to</label>
+                  <input type="number" id="filterTotalTo" name="filterTotalTo" />
+                </td>
+                <td>
+                  <label for="filterSender">Sender</label>
+                  <input type="text" id="filterSender" name="filterSender" />
+                </td>
+                <td>
+                  <label for="filterReceiver">Receiver</label>
+                  <input type="text" id="filterReceiver" name="filterReceiver" />
+                </td>
+                <td>
+                  <label for="filterDateFrom">Date from</label>
+                  <input type="date" id="filterDateFrom" name="filterDateFrom"/>
+                  <br/>
+                  <label for="filterDateTo">Date to</label>
+                  <input type="date" id="filterDateTo" name="filterDateTo" />
+                </td>
+                <td>
+                  <label for="filterStatus">Status</label>
+                  <select id="filterStatus" name="filterStatus">
+                    <option value=""></option>
+                    <option value="SUCCESS">Approved</option>
+                    <option value="REJECTED">Rejected</option>
+                    <option value="PROCESSING">Processing</option>
+                  </select>
+                </td>
+                <td>
+                  <button style="margin-top: 10px;" id="buttonFilterTransactions" class="btn btn-light">Filter</button>
+                </td>
+              </tr>
+          </div>
+    
+        </table>
+        </div>
+        <table id="tableContent" class="table table table-striped">
+
+        </table>
 {% endblock %}
 
 {% block script%}

@@ -42,7 +42,7 @@ def cryptolist():
 
     parameters = {
         'start': '1',
-        'limit': '15',
+        'limit': '50',
         'convert': 'USD'
     }
 
@@ -50,7 +50,6 @@ def cryptolist():
     session.headers.update(headers)
 
     response = session.get(url, params=parameters).json()
-
     coins = response['data']
     cryptos = []
 

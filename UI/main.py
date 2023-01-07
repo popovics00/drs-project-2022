@@ -24,5 +24,9 @@ def user_stats():
 def exchange():
     return render_template('exchangeCrypto.html')
 
+@app.route('/send-crypto')
+def send_crypto():
+    return render_template('send.html')
+
 if __name__ == "__main__":
     app.run(debug=True)

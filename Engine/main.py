@@ -4,6 +4,7 @@ from blueprints.user_stats import user_stats
 from blueprints.deposit import deposit
 from blueprints.getCrypto import crypto_bp
 from blueprints.transferCrypto import transCrypto_bp
+from blueprints.getTransactions import getTrans_bp
 from flask_cors import CORS
 from db_config import *
 
@@ -12,6 +13,7 @@ app.register_blueprint(user_stats)
 app.register_blueprint(deposit)
 app.register_blueprint(crypto_bp)
 app.register_blueprint(transCrypto_bp)
+app.register_blueprint(getTrans_bp)
 
 db.create_all(app=app)
 CORS(app)

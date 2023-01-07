@@ -1,8 +1,9 @@
+from multiprocessing import Process
 from flask import request, jsonify, Blueprint
+from requests import Session
 from db_config import db
-import random, datetime
+import random, datetime, sha3
 from enum import Enum
-
 from models.usercrypto import Usercrypto
 from models.user import User
 from models.cryptotransaction import Cryptotransaction
@@ -28,8 +29,8 @@ def buycrypto():
 
     #transakcija
     id = str(random.getrandbits(128))
-    transaction = Cryptotransaction(receiverEmail = buyer.email, 
-                              senderEmail = '/', 
+    transaction = Cryptotransaction(receiverId = buyer.id, 
+                              senderId = '/', 
                               cryptocurrency = crypto, 
                               amount= amount, 
                               price = price, 
@@ -124,3 +125,70 @@ def confirmConversion():
             return jsonify(e), 400
 
     return jsonify("Convert succeded")
+
+
+@transCrypto_bp.route('/executeTransaction', methods=['POST'])
+def executeTransaction():
+
+    senderId = request.form["id"]
+    receiverEmail = request.form['receiveremail']
+    receiverId = -1
+    users = User.query.all()
+    for u in users:
+        if u.email == receiverEmail:
+            receiverId = u.id
+            
+    crypto = request.form['crypto']
+    amount = request.form['value']
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+
+    p = Process(target = transProcess, args=(senderId, receiverId, crypto, url, amount, ))
+    p.daemon = True
+    p.start()
+
+    return 'Transaction proceeded to execution', 200
+
+def transProcess(senderId, receiverId, crypto, url, amount):
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': 'e29334cb-7952-4d4e-8b0a-19384c6b0dba'
+    }
+
+    cryptoParts = crypto.split()
+    cryptoTemp = '-'
+    cryptoTemp = cryptoTemp.join(cryptoParts)
+    parameters = {'slug': cryptoTemp.lower(), 'convert': 'USD'}
+
+    session1 = Session()
+    session1.headers.update(headers)
+    response = session1.get(url, params=parameters).json()
+
+    coins = response['data']
+
+    id = '0'
+    for key, value in coins.items():
+        id = key
+
+    price = coins[key]['quote']['USD']['price']
+
+    id = str(senderId) + str(receiverId) + amount + str(random.randint(0, 1000)) 
+    
+    k = sha3.keccak_256()
+    k.update(str(id).encode('utf-8'))
+    id = k.hexdigest()
+    transaction = Cryptotransaction(receiverId = str(receiverId),
+                            senderId = str(senderId),
+                            cryptocurrency = crypto,
+                            amount= amount, 
+                            price = price,
+                            total = float(amount) * float(price),
+                            transactionId = id,
+                            date = datetime.datetime.now(),
+                            status = TransactionState.PROCESSING.value[0])
+    try:
+        db.session.add(transaction)
+        db.session.commit()
+    except Exception as e:
+        print('database error')
+        print(str(e))
+        print('database error')
