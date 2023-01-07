@@ -16,4 +16,5 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://root:stefan@loc
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 mysql.init_app(app)
+db = SQLAlchemy(app)
 db.init_app(app) 

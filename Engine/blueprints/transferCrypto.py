@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from multiprocessing.dummy import Process
 from threading import Timer
 from flask import request, jsonify, Blueprint
 from requests import Session
@@ -131,7 +131,7 @@ def confirmConversion():
 
 
 def transaction_observer():
-    Timer(5, transaction_observer, []).start()
+    Timer(0.1, transaction_observer, []).start()
     transactions = Cryptotransaction.query.all()
     db.session.remove()
     cryptoAccounts = Usercrypto.query.all()
@@ -139,26 +139,22 @@ def transaction_observer():
     users = User.query.all() 
     db.session.remove()
 
+
     for transaction in transactions:
-        if transaction.status == 0 and transaction.date + timedelta(minutes = 5)  < datetime.datetime.today():        
+        if transaction.status == 0 and transaction.date + timedelta(minutes = 0.1)  < datetime.datetime.today():        
             userExists = False
             account = object
             
             for user in users:
-                if(user.id == transaction.recieverId):
+                if(user.id == int(transaction.receiverId)):
                     userExists = True
 
             for cryptoAccount in cryptoAccounts:
-                if cryptoAccount.userId == transaction.senderId and cryptoAccount.userId == transaction.cryptocurrency:
+                if cryptoAccount.userId == transaction.senderId and cryptoAccount.cryptocurrency == transaction.cryptocurrency:
                     account = cryptoAccount
 
-            if transaction.senderId == transaction.recieverId:
+            if transaction.senderId == transaction.receiverId:
                 #REJECTED
-                transaction.status = TransactionState.REJECTED.value[0]
-                db.session.add(transaction)
-                db.session.commit()
-            elif (account.balance - (5/100)*account.balance)  < transaction.amount:
-                # REJECTED
                 transaction.status = TransactionState.REJECTED.value[0]
                 db.session.add(transaction)
                 db.session.commit()
@@ -193,9 +189,9 @@ def transaction_observer():
                     db.session.add(newUserCrypto)
                     db.session.commit()
 
-# @transCrypto_bp.before_app_first_request
-# def thread_start():
-#     transaction_observer()
+@transCrypto_bp.before_app_first_request
+def thread_start():
+     transaction_observer()
 
 
 def transProcess(senderId, receiverId, crypto, url, amount):
@@ -236,16 +232,6 @@ def transProcess(senderId, receiverId, crypto, url, amount):
                             transactionId = id,
                             date = datetime.datetime.now(),
                             status = TransactionState.PROCESSING.value[0])
-
-    print(receiverId)
-    print(senderId)
-    print(crypto)
-    print(amount)
-    print(price)
-    print(transaction.total)
-    print(transaction.transactionId)
-    print(transaction.date)
-    print(transaction.status)
 
     try:
         db.session.add(transaction)
