@@ -1,7 +1,9 @@
 from multiprocessing import Process
+from threading import Timer
 from flask import request, jsonify, Blueprint
 from requests import Session
 from db_config import db
+from datetime import timedelta
 import random, datetime, sha3
 from enum import Enum
 from models.usercrypto import Usercrypto
@@ -20,16 +22,16 @@ transCrypto_bp = Blueprint('transferCrypto', __name__)
 def buycrypto():
     balance = 0
 
-    id = request.form['id']
+    userId = request.form['id']
     amount = request.form['amount']
     crypto = request.form['crypto']
     price = request.form['price']
 
-    buyer = User.query.get(id)
+    buyer = User.query.get(userId)
 
     #transakcija
     id = str(random.getrandbits(128))
-    transaction = Cryptotransaction(receiverId = buyer.id, 
+    transaction = Cryptotransaction(receiverId = userId, 
                               senderId = '/', 
                               cryptocurrency = crypto, 
                               amount= amount, 
@@ -43,7 +45,7 @@ def buycrypto():
         exists = False
 
         for cryptoAccount in cryptoAccounts:
-            if(cryptoAccount.userId == buyer.id and cryptoAccount.cryptocurrency == crypto):
+            if(cryptoAccount.userId == userId and cryptoAccount.cryptocurrency == crypto):
                 cryptoAccount.balance += float(amount)
                 db.session.add(cryptoAccount)
                 db.session.commit()
@@ -55,7 +57,7 @@ def buycrypto():
                 exists = True
 
         if(exists == False):
-            cryptoAccount = Usercrypto(userId = buyer.id, cryptocurrency = crypto, balance = float(amount))
+            cryptoAccount = Usercrypto(userId = userId, cryptocurrency = crypto, balance = float(amount))
             try:
                 db.session.add(cryptoAccount)
                 db.session.commit()  
@@ -64,6 +66,7 @@ def buycrypto():
                 db.session.add(buyer)
                 db.session.commit()   
             except Exception as e:
+                print(str(e))
                 return jsonify(e), 400
 
         transaction.status = TransactionState.APPROVED.value
@@ -127,26 +130,73 @@ def confirmConversion():
     return jsonify("Convert succeded")
 
 
-@transCrypto_bp.route('/executeTransaction', methods=['POST'])
-def executeTransaction():
+def transaction_observer():
+    Timer(5, transaction_observer, []).start()
+    transactions = Cryptotransaction.query.all()
+    db.session.remove()
+    cryptoAccounts = Usercrypto.query.all()
+    db.session.remove()
+    users = User.query.all() 
+    db.session.remove()
 
-    senderId = request.form["id"]
-    receiverEmail = request.form['receiveremail']
-    receiverId = -1
-    users = User.query.all()
-    for u in users:
-        if u.email == receiverEmail:
-            receiverId = u.id
+    for transaction in transactions:
+        if transaction.status == 0 and transaction.date + timedelta(minutes = 5)  < datetime.datetime.today():        
+            userExists = False
+            account = object
             
-    crypto = request.form['crypto']
-    amount = request.form['value']
-    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+            for user in users:
+                if(user.id == transaction.recieverId):
+                    userExists = True
 
-    p = Process(target = transProcess, args=(senderId, receiverId, crypto, url, amount, ))
-    p.daemon = True
-    p.start()
+            for cryptoAccount in cryptoAccounts:
+                if cryptoAccount.userId == transaction.senderId and cryptoAccount.userId == transaction.cryptocurrency:
+                    account = cryptoAccount
 
-    return 'Transaction proceeded to execution', 200
+            if transaction.senderId == transaction.recieverId:
+                #REJECTED
+                transaction.status = TransactionState.REJECTED.value[0]
+                db.session.add(transaction)
+                db.session.commit()
+            elif (account.balance - (5/100)*account.balance)  < transaction.amount:
+                # REJECTED
+                transaction.status = TransactionState.REJECTED.value[0]
+                db.session.add(transaction)
+                db.session.commit()
+            elif userExists == False:
+                #REJECED
+                transaction.status = TransactionState.REJECTED.value[0]
+                db.session.add(transaction)
+                db.session.commit()
+            else:
+                #APPROVED
+                transaction.status = TransactionState.APPROVED.value
+                db.session.add(transaction)
+                db.session.commit()
+
+                noReceiver = True
+
+                for cryptoAccount in cryptoAccounts:
+                    if cryptoAccount.userId == transaction.receiverId and cryptoAccount.cryptocurrency == transaction.cryptocurrency:
+                        cryptoAccount.balance += transaction.amount
+                        db.session.add(cryptoAccount)
+                        db.session.commit()
+                        noReceiver = False
+                    if cryptoAccount.userId == transaction.senderId and cryptoAccount.cryptocurrency == transaction.cryptocurrency:
+                        cryptoAccount.balance -= (transaction.amount + (5/100) * transaction.amount)
+                        db.session.add(cryptoAccount)
+                        db.session.commit()
+                if noReceiver:
+                    newUserCrypto = Usercrypto(userId = transaction.receiverId,
+                                            cryptocurrency = transaction.cryptocurrency,
+                                            balance = transaction.amount)
+                    
+                    db.session.add(newUserCrypto)
+                    db.session.commit()
+
+# @transCrypto_bp.before_app_first_request
+# def thread_start():
+#     transaction_observer()
+
 
 def transProcess(senderId, receiverId, crypto, url, amount):
     headers = {
@@ -176,6 +226,7 @@ def transProcess(senderId, receiverId, crypto, url, amount):
     k = sha3.keccak_256()
     k.update(str(id).encode('utf-8'))
     id = k.hexdigest()
+
     transaction = Cryptotransaction(receiverId = str(receiverId),
                             senderId = str(senderId),
                             cryptocurrency = crypto,
@@ -185,10 +236,42 @@ def transProcess(senderId, receiverId, crypto, url, amount):
                             transactionId = id,
                             date = datetime.datetime.now(),
                             status = TransactionState.PROCESSING.value[0])
+
+    print(receiverId)
+    print(senderId)
+    print(crypto)
+    print(amount)
+    print(price)
+    print(transaction.total)
+    print(transaction.transactionId)
+    print(transaction.date)
+    print(transaction.status)
+
     try:
         db.session.add(transaction)
         db.session.commit()
     except Exception as e:
         print('database error')
         print(str(e))
-        print('database error')
+
+
+@transCrypto_bp.route('/executeTransaction', methods=['POST'])
+def executeTransaction():
+
+    senderId = request.form["id"]
+    receiverEmail = request.form['receiveremail']
+    receiverId = -1
+    users = User.query.all()
+    for u in users:
+        if u.email == receiverEmail:
+            receiverId = u.id
+            
+    crypto = request.form['crypto']
+    amount = request.form['value']
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+
+    p = Process(target = transProcess, args=(senderId, receiverId, crypto, url, amount, ))
+    p.daemon = True
+    p.start()
+
+    return 'Transaction proceeded to execution', 200
