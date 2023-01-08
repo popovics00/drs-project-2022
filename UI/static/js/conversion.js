@@ -81,7 +81,7 @@ $(document).ready(function() {
                 'myCryptoValue': myCryptoValue
             },
             success: function(response) {
-                if(response == "Convert succeded") {
+                if(response == "Uspesna transakcija.") {
                     document.getElementById('allCryptos').value = "Choose any crypto";
                     document.getElementById('myCrypto').value = "Choose your crypto";
                     document.getElementById('inputConvertAmount').value = "";

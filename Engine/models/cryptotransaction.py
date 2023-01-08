@@ -28,14 +28,3 @@ class Cryptotransaction(db.Model):
                   transactionId = self.transactionId,
                   date = self.date,
                   status = self.status)
-        
-class CryptotransactionSchema(Schema):
-    receiverId = fields.Str()
-    senderId = fields.Str()
-    cryptocurrency = fields.Str()
-    amount = fields.Float()
-    price = fields.Float()
-    total = fields.Float()
-    transactionId = fields.Str()
-    date = fields.DateTime()
-    status = fields.Integer()

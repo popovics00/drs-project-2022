@@ -5,9 +5,11 @@ from models.user import User
 from models.cryptocurrency import Cryptocurrency
 from models.usercrypto import Usercrypto, UsercryptoSchema
 
-crypto_bp = Blueprint('crypto', __name__)
+getCrypto_bp = Blueprint('crypto', __name__)
 
-@crypto_bp.route('/getUserCryptos', methods=['GET'])
+
+#LISTA VALUTA KORISNIKA ZA DROPDOWN
+@getCrypto_bp.route('/getUserCryptos', methods=['GET'])
 def getUserCryptos():
     id = request.args.get("id")
     allUsersCryptos = Usercrypto.query.all()
@@ -19,7 +21,9 @@ def getUserCryptos():
     return jsonify(cryptoNames)
 
 
-@crypto_bp.route('/accountCrypto', methods=['GET'])
+
+#FUNKCIJA VRACA LISTU VALUTA KOJE KORISNIK POSEDUJE
+@getCrypto_bp.route('/accountCrypto', methods=['GET'])
 def accountCrypto():
     id = request.args.get("id")
 
@@ -31,7 +35,9 @@ def accountCrypto():
     return jsonify(myCripto)
 
 
-@crypto_bp.route('/cryptolist', methods=['GET'])
+
+#LISTA SVIH KRIPTOVALUTA
+@getCrypto_bp.route('/cryptolist', methods=['GET'])
 def cryptolist():
     url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest"
 
@@ -48,18 +54,17 @@ def cryptolist():
 
     session = Session()
     session.headers.update(headers)
+    #saljemo zahtev na dati api sa parametrima koje trazi i dobijamo odgovor u json fajlu
+    odgovorApia = session.get(url, params=parameters).json()
+    odgovorValute = odgovorApia['data']
+    valute = []
 
-    response = session.get(url, params=parameters).json()
-    coins = response['data']
-    cryptos = []
-
-    for x in coins:
+    #prolazimo kroz listu valuta
+    for x in odgovorValute:
         name = x['name']
         price = x['quote']['USD']['price']
         change24h = x['quote']['USD']['percent_change_24h']
+        pravimoValutu = Cryptocurrency(name, price, change24h)
+        valute.append(pravimoValutu.to_json()) #pravimo valutu i pakujemo u json fajl
 
-        cryptocurrency = Cryptocurrency(name, price, change24h)
-
-        cryptos.append(cryptocurrency.to_json())
-
-    return jsonify(cryptos)
+    return jsonify(valute)  #saljemo odgovor kao json

@@ -4,35 +4,42 @@ import datetime
 
 from models.cryptotransaction import Cryptotransaction
 
-getTrans_bp = Blueprint('getTrans', __name__)
+getTransactions_bp = Blueprint('getTransactions', __name__)
     
-@getTrans_bp.route('/getMyTransactions', methods=['GET'])
+
+#FUNKCIJA KOJA VRACA SVE TRANSAKCIJE ZA DATOG KORISNIKA
+@getTransactions_bp.route('/getMyTransactions', methods=['GET'])
 def getMyTransactions():    
     id = request.args.get("id")
 
-    transactionsList = []
+    listaTransakcija = [] #lista transakcija koje su naseg korisnika
     transactions = Cryptotransaction.query.all()
     for t in transactions:
         if t.receiverId == id or t.senderId == id:
-            transactionsList.append(t.to_json())
-            
-    transactionsList.sort(key=lambda x: x['date'], reverse=True)
+            listaTransakcija.append(t.to_json())
 
+    #sortiramo transakcije po datumu od najnovije
+    listaTransakcija.sort(key=lambda x: x['date'], reverse=True)
+
+    #ako imamo transakciju onda je saljemo kao json fajl
     if len(transactions) == 0:
-        return jsonify("You have no transactions!")
+        return jsonify("Nemate ni jednu transakciju!")
     else:
-        return jsonify(transactionsList)
+        return jsonify(listaTransakcija)
 
-@getTrans_bp.route('/filterTransactions', methods=['POST'])
+
+#FILTRACIJA TRANSAKCIJA
+@getTransactions_bp.route('/filterTransactions', methods=['POST'])
 def filterTransactions():
     id = request.form["id"]
 
     transactionsTemp = Cryptotransaction.query.all()
-    transactions = []
+    transakcije = [] #transakcije korisnika
     for t in transactionsTemp:
         if t.senderId == id or t.senderId == id:
-             transactions.append(t.to_json())
-
+             transakcije.append(t.to_json())
+    
+    #pribavljanje parametara
     filterCrypto = request.form["filterCrypto"]
     filterAmountFrom = request.form["filterAmountFrom"]
     filterAmountTo = request.form["filterAmountTo"]
@@ -46,39 +53,6 @@ def filterTransactions():
     filterDateTo = request.form["filterDateTo"]
     filterStatus = request.form["filterStatus"]
 
-    if(filterCrypto != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['cryptocurrency'] == filterCrypto]
-    
-    if(filterAmountFrom != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['amount'] >= float(filterAmountFrom)]
-    
-    if(filterAmountTo != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['amount'] <= float(filterAmountTo)]
-    
-    if(filterPriceFrom != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['price'] >= float(filterPriceFrom)]
-    
-    if(filterPriceTo != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['price'] <= float(filterPriceTo)]
-    
-    if(filterTotalFrom != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['total'] >= float(filterTotalFrom)]
-    
-    if(filterTotalTo != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['total'] <= float(filterTotalTo)]
-    
-    if(filterSender != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['senderId'] == filterSender]
-    
-    if(filterReceiver != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['receiverId'] == filterReceiver]
-    
-    if(filterDateFrom != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['date'] >= datetime.datetime.strptime(filterDateFrom, '%Y-%m-%d')]
-    
-    if(filterDateTo != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['date'] <= datetime.datetime.strptime(filterDateTo, '%Y-%m-%d')]
-    
     if(filterStatus == "SUCCESS"): 
         filterStatus = 2
     elif(filterStatus == "REJECTED"): 
@@ -86,46 +60,72 @@ def filterTransactions():
     elif(filterStatus == "PROCESSING"): 
         filterStatus = 0
 
+    if(filterCrypto != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['cryptocurrency'] == filterCrypto]
+    if(filterPriceFrom != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['price'] >= float(filterPriceFrom)]
+    if(filterPriceTo != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['price'] <= float(filterPriceTo)]
+    if(filterTotalFrom != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['total'] >= float(filterTotalFrom)]
+    if(filterTotalTo != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['total'] <= float(filterTotalTo)]
+    if(filterAmountFrom != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['amount'] >= float(filterAmountFrom)]
+    if(filterAmountTo != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['amount'] <= float(filterAmountTo)]
+    if(filterDateFrom != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['date'] >= datetime.datetime.strptime(filterDateFrom, '%Y-%m-%d')]
+    if(filterDateTo != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['date'] <= datetime.datetime.strptime(filterDateTo, '%Y-%m-%d')]
+    if(filterSender != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['senderId'] == filterSender]
+    if(filterReceiver != "0"):
+        transakcije[:] = [transaction for transaction in transakcije if transaction['receiverId'] == filterReceiver]
     if(filterStatus != "0"):
-        transactions[:] = [transaction for transaction in transactions if transaction['status'] == filterStatus]
+        transakcije[:] = [transaction for transaction in transakcije if transaction['status'] == filterStatus]
 
-    if len(transactions) == 0:
-        return jsonify("You have no transactions that correspond to that filter!")
+    if len(transakcije) != 0:
+        return jsonify(transakcije)
     else:
-        return jsonify(transactions)
+        return jsonify("Nemamo transakcija koje mozemo filtrirati!")
 
-@getTrans_bp.route('/getSortMyTransactions', methods=['POST'])
+
+#SORITRANJE TRANSAKCIJA
+@getTransactions_bp.route('/getSortMyTransactions', methods=['POST'])
 def getSortMyTransactions():
+    #izvlacimo parametre
     id = request.form["id"]
-
-    transactionsList = []
-    transactions = Cryptotransaction.query.all()
-    for t in transactions:
-        if t.receiverId == id or t.senderId == id:
-            transactionsList.append(t.to_json())
-
     sortBy = request.form['sortBy']
     sortAscDesc = request.form['sortAscDesc']
+    
+    #izvlacimo transakcije korisnika
+    transactions = Cryptotransaction.query.all()
+    listaTransakcijaKorisnika = []
+    for t in transactions:
+        if t.receiverId == id or t.senderId == id:
+            listaTransakcijaKorisnika.append(t.to_json())
+
 
     if(sortBy == "Price"):
         if(sortAscDesc == "Ascending"):
-            transactionsList.sort(key=lambda x: x['price'])
+            listaTransakcijaKorisnika.sort(key=lambda x: x['price'])
         else:
-            transactionsList.sort(key=lambda x: x['price'], reverse=True)
-    elif(sortBy == "Amount"):
-        if(sortAscDesc == "Ascending"):
-            transactionsList.sort(key=lambda x: x['amount'])
-        else:
-            transactionsList.sort(key=lambda x: x['amount'], reverse=True)
+            listaTransakcijaKorisnika.sort(key=lambda x: x['price'], reverse=True)
     elif(sortBy == "Date"):
         if(sortAscDesc == "Ascending"):
-            transactionsList.sort(key=lambda x: x['date'])
+            listaTransakcijaKorisnika.sort(key=lambda x: x['date'])
         else:
-            transactionsList.sort(key=lambda x: x['date'], reverse=True)
+            listaTransakcijaKorisnika.sort(key=lambda x: x['date'], reverse=True)
+    elif(sortBy == "Amount"):
+        if(sortAscDesc == "Ascending"):
+            listaTransakcijaKorisnika.sort(key=lambda x: x['amount'])
+        else:
+            listaTransakcijaKorisnika.sort(key=lambda x: x['amount'], reverse=True)
     elif(sortBy == "Total"):
         if(sortAscDesc == "Ascending"):
-            transactionsList.sort(key=lambda x: x['total'])
+            listaTransakcijaKorisnika.sort(key=lambda x: x['total'])
         else:
-            transactionsList.sort(key=lambda x: x['total'], reverse=True)
+            listaTransakcijaKorisnika.sort(key=lambda x: x['total'], reverse=True)
 
-    return jsonify(transactionsList)
+    return jsonify(listaTransakcijaKorisnika)

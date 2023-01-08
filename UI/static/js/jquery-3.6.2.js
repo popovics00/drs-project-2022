@@ -1814,7 +1814,7 @@ getText = Sizzle.getText = function( elem ) {
 		return elem.nodeValue;
 	}
 
-	// Do not include comment or processing instruction nodes
+	// Do not include comment or Processing instruction nodes
 
 	return ret;
 };
@@ -2274,7 +2274,7 @@ Expr = Sizzle.selectors = {
 
 			// http://www.w3.org/TR/selectors/#empty-pseudo
 			// :empty is negated by element (1) or content nodes (text: 3; cdata: 4; entity ref: 5),
-			//   but not by others (comment: 8; processing instruction: 7; etc.)
+			//   but not by others (comment: 8; Processing instruction: 7; etc.)
 			// nodeType < 6 works because attributes (2) do not appear as children
 			for ( elem = elem.firstChild; elem; elem = elem.nextSibling ) {
 				if ( elem.nodeType < 6 ) {
@@ -2600,7 +2600,7 @@ function setMatcher( preFilter, selector, matcher, postFilter, postFinder, postS
 				// If we have a postFinder, or filtered seed, or non-seed postFilter or preexisting results,
 				postFinder || ( seed ? preFilter : preexisting || postFilter ) ?
 
-					// ...intermediate processing is necessary
+					// ...intermediate Processing is necessary
 					[] :
 
 					// ...otherwise use results directly
@@ -3766,7 +3766,7 @@ jQuery.extend( {
 				[ "resolve", "done", jQuery.Callbacks( "once memory" ),
 					jQuery.Callbacks( "once memory" ), 0, "resolved" ],
 				[ "reject", "fail", jQuery.Callbacks( "once memory" ),
-					jQuery.Callbacks( "once memory" ), 1, "rejected" ]
+					jQuery.Callbacks( "once memory" ), 1, "Rejected" ]
 			],
 			state = "pending",
 			promise = {
@@ -3964,7 +3964,7 @@ jQuery.extend( {
 							)
 						);
 
-						// rejected_handlers.add( ... )
+						// Rejected_handlers.add( ... )
 						tuples[ 2 ][ 3 ].add(
 							resolve(
 								0,
@@ -4001,15 +4001,15 @@ jQuery.extend( {
 					function() {
 
 						// state = "resolved" (i.e., fulfilled)
-						// state = "rejected"
+						// state = "Rejected"
 						state = stateString;
 					},
 
-					// rejected_callbacks.disable
+					// Rejected_callbacks.disable
 					// fulfilled_callbacks.disable
 					tuples[ 3 - i ][ 2 ].disable,
 
-					// rejected_handlers.disable
+					// Rejected_handlers.disable
 					// fulfilled_handlers.disable
 					tuples[ 3 - i ][ 3 ].disable,
 
@@ -4023,7 +4023,7 @@ jQuery.extend( {
 
 			// progress_handlers.fire
 			// fulfilled_handlers.fire
-			// rejected_handlers.fire
+			// Rejected_handlers.fire
 			list.add( tuple[ 3 ].fire );
 
 			// deferred.notify = function() { deferred.notifyWith(...) }
@@ -5627,7 +5627,7 @@ jQuery.event = {
 					leverageNative( el, "click", returnTrue );
 				}
 
-				// Return false to allow normal processing in the caller
+				// Return false to allow normal Processing in the caller
 				return false;
 			},
 			trigger: function( data ) {
@@ -5695,7 +5695,7 @@ function leverageNative( el, type, expectSync ) {
 
 			if ( ( event.isTrigger & 1 ) && this[ type ] ) {
 
-				// Interrupt processing of the outer synthetic .trigger()ed event
+				// Interrupt Processing of the outer synthetic .trigger()ed event
 				// Saved data should be false in such cases, but might be a leftover capture object
 				// from an async native handler (gh-4350)
 				if ( !saved.length ) {
@@ -5907,7 +5907,7 @@ jQuery.each( { focus: "focusin", blur: "focusout" }, function( type, delegateTyp
 			// dataPriv.set( this, "blur", ... )
 			leverageNative( this, type, expectSync );
 
-			// Return false to allow normal processing in the caller
+			// Return false to allow normal Processing in the caller
 			return false;
 		},
 		trigger: function() {
@@ -6700,9 +6700,9 @@ function curCSS( elem, name, computed ) {
 			//
 			// rtrimCSS treats U+000D CARRIAGE RETURN and U+000C FORM FEED
 			// as whitespace while CSS does not, but this is not a problem
-			// because CSS preprocessing replaces them with U+000A LINE FEED
+			// because CSS preProcessing replaces them with U+000A LINE FEED
 			// (which *is* CSS whitespace)
-			// https://www.w3.org/TR/css-syntax-3/#input-preprocessing
+			// https://www.w3.org/TR/css-syntax-3/#input-preProcessing
 			ret = ret.replace( rtrimCSS, "$1" ) || undefined;
 		}
 
@@ -9657,7 +9657,7 @@ jQuery.extend( {
 			} catch ( e ) {
 
 				// If there is an error parsing the URL, assume it is crossDomain,
-				// it can be rejected by the transport if it is invalid
+				// it can be Rejected by the transport if it is invalid
 				s.crossDomain = true;
 			}
 		}

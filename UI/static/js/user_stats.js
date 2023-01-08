@@ -153,7 +153,7 @@ $(document).ready(function(){
         },
         success: function(response) {
             var table = $('#tableContent');
-            table.append('<tr><th>Crypto</th><th>Amount</th><th>Gas</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
+            table.append('<tr><th>Crypto</th><th>Amount</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
 
             var status;
             var i;
@@ -161,29 +161,29 @@ $(document).ready(function(){
                 if(response[i].status == 0) {
                     if(response[i].senderId === '/' )
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                     }
                     else
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                     }
                 } else if(response[i].status == 2) {
                     if(response[i].senderId === '/')
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                     }
                     else
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                     }
                 } else if(response[i].status == 1) {
                     if(response[i].senderId === '/')
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                     }
                     else
                     {
-                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                        table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverId + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                     }
                 }
             }
@@ -247,7 +247,7 @@ $(document).ready(function(){
                 var table = $('#tableContent');
                 table.empty();
 
-                table.append('<tr><th>Crypto</th><th>Amount</th><th>Gas</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
+                table.append('<tr><th>Crypto</th><th>Amount</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
     
                 var status;
                 var i;
@@ -255,29 +255,29 @@ $(document).ready(function(){
                     if(response[i].status == 0) {
                         if(response[i].senderId === '/' )
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                         }
                     } else if(response[i].status == 2) {
                         if(response[i].senderId === '/')
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                         }
                     } else if(response[i].status == 1) {
                         if(response[i].senderId === '/')
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                         }
                     }
                 }
@@ -361,36 +361,36 @@ $(document).ready(function(){
                 var table = $('#tableContent');
                 table.empty();
 
-                table.append('<tr><th>Crypto</th><th>Amount</th><th>Gas</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
+                table.append('<tr><th>Crypto</th><th>Amount</th><th>Price</th><th>Total</th><th>Sender</th><th>Receiver</th><th>Date</th><th>Status</th></tr>');
     
                 var i;
                 for(i = 0; i < response.length; i++) {
                     if(response[i].status == 0) {
                         if(response[i].senderId === '/' )
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: blue;">PROCESSING</td></tr>');
                         }
                     } else if(response[i].status == 2) {
                         if(response[i].senderId === '/')
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">SUCCESS</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: green;">APPROVED</td></tr>');
                         }
                     } else if(response[i].status == 1) {
                         if(response[i].senderId === '/')
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + '/' + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                         }
                         else
                         {
-                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].amount * 5/100 + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
+                            table.append('<tr><td class="table-info">' + response[i].cryptocurrency + '</td><td class="table-info">' + response[i].amount + '</td><td class="table-info">' + response[i].price + '</td><td class="table-info">' + response[i].total + '</td><td class="table-info">' + response[i].senderId + '</td><td class="table-info">' + response[i].receiverEmail + '</td><td class="table-info">' + response[i].date + '</td><td class="table-info" style="color: red;">REJECTED</td></tr>');
                         }
                     }
                 }
