@@ -146,11 +146,11 @@ def obradaTransakcije():
     for t in transakcije: # prolazimo kroz listu transakcija kako bi nasli transakciju koja treba da se approva
         if t.status == 0 and t.date + timedelta(minutes = 0.2)  < datetime.datetime.today():        
             korisnikPostoji = False
-            account = object
+            wallet = object
 
             for w in wallets:
                 if w.userId == t.senderId and w.cryptocurrency == t.cryptocurrency:
-                    account = w
+                    wallet = w
             for user in users:
                 if(user.id == int(t.receiverId)):
                     korisnikPostoji = True
@@ -163,7 +163,7 @@ def obradaTransakcije():
                 t.status = StatusTransakcije.Rejected.value[0]
                 db.session.add(t)
                 db.session.commit()
-            elif account.balance  < t.amount: #AKO NEMA DOVOLJNO NOVCA
+            elif wallet.balance  < t.amount: #AKO NEMA DOVOLJNO NOVCA
                 t.status = StatusTransakcije.Rejected.value[0]
                 db.session.add(t)
                 db.session.commit()
