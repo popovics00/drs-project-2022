@@ -9,9 +9,11 @@ flask-sqlalchemy = "==2.5.1"
 flask-login = "*"
 requests = "*"
 flask-cors = "*"
-mysql-connector-python-rf = "*"
 mysql-connector-python = "*"
 flask-mysql = "*"
+flask-marshmallow = "*"
+docker = "*"
+docker-compose = "*"
 
 [dev-packages]
 

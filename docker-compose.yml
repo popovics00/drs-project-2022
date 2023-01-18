@@ -1,25 +1,46 @@
-version: "2"
+version: "3.8"
 services:
   ui:
     build: ./UI
     links:
       - engine
     ports:
-      - "5001:5000"
+      - "5000:5000"
+    depends_on:
+      - mysql
+    networks:
+      - flask-network
   engine:
     build: ./Engine
     links:
-      - db
+      - mysql
+    depends_on:
+      - mysql
     ports:
-      - "5000:5000"
-  db:
-    image: mysql:5.7
-    ports:
-      - "3307:3306"
+      - "5001:5001"
     environment:
-      MYSQL_ROOT_PASSWORD: stefan
-      MYSQL_USER: root
-      MYSQL_PASSWORD: stefan
-      MYSQL_DATABASE: database_drs    
+      DB_NAME: database_drs
+      DB_USER: root
+      DB_PASSWORD: Slatkamalasladakja123!
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/:ro
+      - ./Engine:/app
+    networks:
+      - flask-network
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Slatkamalasladakja123!
+    volumes:
+      - ./DB:/docker-entrypoint-initdb.d/:ro
+      - mysql-data:/var/lib/mysql
+    networks:
+      - flask-network
+
+volumes:
+  mysql-data:
+    driver: local
+
+networks:
+  flask-network:
