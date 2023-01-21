@@ -32,11 +32,11 @@ def update_profile():
     if password == "": #ako pass nije dodat onda uzimamo onaj koji se vec nalazi u korisniku
         update_user = User(id = id, name=name, lastname=lastname, email = email, password = user.password, address = address, city = city,
                        country = country, phoneNumber = phoneNumber, balance=user.balance, verificated = user.verificated, 
-                       nameOnCard = user.nameOnCard, cardNumber = user.cardNumber, expDate = user.expDate)
+                       cardNumber = user.cardNumber, expDate = user.expDate, securityCode = user.securityCode)
     else:
         update_user = User(id = id, name=name, lastname=lastname, email = email, password = generate_password_hash(password), address = address, city = city,
                        country = country, phoneNumber = phoneNumber, balance=user.balance, verificated = user.verificated, 
-                       nameOnCard = user.nameOnCard, cardNumber = user.cardNumber, expDate = user.expDate)
+                       cardNumber = user.cardNumber, expDate = user.expDate, securityCode = user.securityCode)
     
     db.session.delete(user)
     db.session.commit() #jer je id primarni kljuc a na isti id zelimo da upisemo i novog korisnika pa prvo moramo da
@@ -48,15 +48,33 @@ def update_profile():
 @user_stats.route('/verify-account', methods=["POST"])
 def verify():
     id = request.form.get('userIdCard')
-    user = request.form.get('user')
     card_num = request.form.get('cardNumber')
     exp_date = request.form.get('expDate')
     code = request.form.get('code')
+    status = 0
+    counter = 0
     
-    user_by_id = User.query.get(id)
-    user_by_id.verificated = True
-    user_by_id.nameOnCard = user
-    user_by_id.cardNumber = card_num
-    user_by_id.expDate = exp_date
-    db.session.commit()
-    return jsonify(user_by_id.as_dict())
+    user= User.query.get(id)
+    #brisanje postojeceg, tj update
+    
+    if card_num != '4242-4242-4242-4242':
+        status = 1
+        counter += 1
+    if exp_date == '02/23':
+        status = 1
+        counter += 1
+    if code == '123':
+        status = 1
+        counter += 1
+    
+    if status == 1 and counter == 3:
+         db.session.delete(user)
+         db.session.commit()
+         user_by_id = User(id = id, name=user.name, lastname=user.lastname, email = user.email, password = user.password, address = user.address, city = user.city,
+                       country = user.country, phoneNumber = user.phoneNumber, balance=user.balance, verificated = True, 
+                       cardNumber = card_num, expDate = exp_date, securityCode = code)
+         db.session.add(user_by_id)
+         db.session.commit()
+         return jsonify(user_by_id.as_dict())
+    else:
+        return jsonify(user.as_dict())

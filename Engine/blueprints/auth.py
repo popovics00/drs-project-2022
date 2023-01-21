@@ -34,8 +34,8 @@ def sign_up():
    existing_user = User.query.filter_by(email=email).first()
    if not(existing_user):
        new_user = User(name = first_name, lastname = lastname, address = address, city = city, country = country, phoneNumber = phoneNumber,
-                   email = email, password = generate_password_hash(password, method='sha256'), balance = 0, verificated = False, nameOnCard = "",
-                   cardNumber = "", expDate = "")
+                   email = email, password = generate_password_hash(password, method='sha256'), balance = 0, verificated = False,
+                   cardNumber = "", expDate = "", securityCode="")
        db.session.add(new_user)
        db.session.commit()
        user_register = True

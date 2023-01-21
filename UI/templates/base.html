@@ -57,10 +57,9 @@
 
       <script>
         $(window).on('load', function() {
-          $( "#logout" ).click(function() {
+          $("#logout").click(function() {
             sessionStorage.removeItem("current_user_id");
-            location.reload()
-            windows.location.href = "/"
+            window.location.href = "/"
           });
 
           if(sessionStorage.getItem("current_user_id") === null){

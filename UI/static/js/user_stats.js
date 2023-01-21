@@ -22,26 +22,29 @@ $(document).ready(function () {
             document.getElementById('phoneNum').value = response.phoneNumber;
             document.getElementById('email').value = response.email;
             document.getElementById('balance').value = response.balance;
+            document.getElementById('user').value = response.name;
             if(response.expDate != ""){
                 document.getElementById('expDate').value = response.expDate;
-            }
-            if(response.nameOnCard != ""){
-                document.getElementById('user').value = response.nameOnCard;
+                document.getElementById('expDate').readOnly = true;
             }
             if(response.cardNumber != ""){
                 document.getElementById('cardNumber').value = response.cardNumber;
+                document.getElementById('cardNumber').readOnly = true;
             }
-            if(response.verificated){
+            if(response.securityCode != ""){
+                document.getElementById('code').value = response.securityCode;
+                document.getElementById('code').readOnly = true;
+            }
+            if(response.verificated != false){
                 document.getElementById('btnVerify').style.display = "none";
-                document.getElementById('btnDeposit').style.display = "block";
+                document.getElementById('depositBtn').style.display = "block";
             }
             else{
                 document.getElementById('btnVerify').style.display = "block";
-                document.getElementById('btnDeposit').style.display = "none";
+                document.getElementById('depositBtn').style.display = "none";
             }
         }
     });
-
     $('#edit').submit(function(e){
         e.preventDefault();
         let id = $('#userId').val()
@@ -57,28 +60,31 @@ $(document).ready(function () {
         $.post('http://127.0.0.1:5001/update-profile', $('#edit').serialize(),
                         function (data, status) {
                             document.getElementById('userId').value = data.id;
-                            document.getElementById('firstName').value = data.name
+                            document.getElementById('firstName').value = data.name;
                             document.getElementById('lastName').value = data.lastname;
                             document.getElementById('address').value = data.address;
                             document.getElementById('city').value = data.city;
                             document.getElementById('country').value = data.country;
                             document.getElementById('phoneNum').value = data.phoneNumber;
                             document.getElementById('email').value = data.email;
+                            document.getElementById('user').value = data.name;
                         });
     });
 
     $('#verification').submit(function(e){
         e.preventDefault();
-        let id = $('#userId').val()
-        let user = $('#user').val();
-        let cardNumber = $('#cardNumber').val()
-        let expDate = $('#expDate').val();
-        let code = $('#code').val()
-        
         $.post('http://127.0.0.1:5001/verify-account', $('#verification').serialize(),
                         function (data, status) {
-                            alert("kartica uspesno dodata")
-                            location.reload()
+                            if(data.cardNumber == "4244-4244-4244-4244"  && data.securityCode == "123" && data.expDate == "02/23"){
+                                alert("kartica verifikovana")
+                                location.reload()
+                            }
+                            else{
+                                alert("neuspesna verifikacija kartice, probajte ponovo")
+                                document.getElementById('expDate').value = "";
+                                document.getElementById('code').value = "";
+                                document.getElementById('cardNumber').value = "";
+                            }
                         });
     });
 
@@ -90,13 +96,9 @@ $(document).ready(function () {
                 document.getElementById('balance').value = JSON.stringify(data)
             });
         }
-
-        document.getElementById('inputDeposit').value = 0
+        document.getElementById('inputDeposit').value = null
     });
 
-});
-
-$(document).ready(function () {
     $.ajax({
         url: 'http://127.0.0.1:5001/accountCrypto',
         type: 'GET',
@@ -114,17 +116,13 @@ $(document).ready(function () {
                 cryptolist += '<td class="table-info">' + value.cryptocurrency + '</td>';
                 cryptolist += '<td class="table-info">' + value.balance + '</td>';
                 cryptolist += '</tr>';
-            })
+            });
 
             var x = document.getElementById('cryptotable');
             x.innerHTML = cryptolist;
         }
-    })
-})
+    });
 
-
-
-$(document).ready(function(){
     $.ajax({
         url:'http://127.0.0.1:5001/cryptolist',
         type:'GET',

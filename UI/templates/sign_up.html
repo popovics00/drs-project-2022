@@ -7,37 +7,42 @@
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for = "firstName">First Name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name">
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Enter first name" required>
             </div>
             <div class="form-group col-md-6">
                 <label for = "lastName">Last Name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name">
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Enter last name" required>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
                 <label for = "address">Address</label>
-                <input type="text" class="form-control" id="address" name="address" placeholder="Enter address">
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter address" required>
             </div>
             <div class="form-group col-md-3">
                 <label for = "city">City</label>
-                <input type="text" class="form-control" id="city" name="city" placeholder="Enter city">
+                <input type="text" class="form-control" id="city" name="city" placeholder="Enter city" required>
             </div>
             <div class="form-group col-md-3">
                 <label for = "country">Country</label>
-                <input type="text" class="form-control" id="country" name="country" placeholder="Enter country">
+                <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" required>
             </div>
         </div>
         <div class="form-group">
 			<label for = "phoneNum">Phone number</label>
-			<input type="text" class="form-control" id="phoneNum" name="phoneNum" placeholder="Enter phone number">
+			<input type="tel" class="form-control" id="phoneNum" name="phoneNum"  pattern="[0-9]{3}[0-9]{3}[0-9]{4}" 
+            placeholder="Enter phone number"  oninvalid="this.setCustomValidity('Format of number: xxxxxxxxxx')"
+            oninput="this.setCustomValidity('')" required>
 		</div>
         <div class="form-group">
 			<label for="email">Email Address</label>
-		    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"></div>
+		    <input type="email" class="form-control" id="email" name="email" pattern=".+@.+" 
+            placeholder="Enter email" oninvalid="this.setCustomValidity('Wrong format. Example of mail address: name@gmail.com')"
+            oninput="this.setCustomValidity('')" required>
+        </div>
 		<div class="form-group">
-			<label for = "password1">Password</label>
-			<input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+			<label for = "password">Password</label>
+			<input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
 		</div>
 		<br />
 		<input type="submit" class="btn btn-primary" value="Register"/>

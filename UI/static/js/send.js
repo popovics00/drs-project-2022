@@ -1,5 +1,9 @@
-
 $(document).ready(function () {
+    if (sessionStorage.getItem('current_user_id') === null){
+        window.location.href = '/'
+        alert('Korisnik nije ulogovan')
+    }
+    
     $.ajax({
         url:'http://127.0.0.1:5001/getUserCryptos',
         type:'GET',
