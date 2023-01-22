@@ -3,7 +3,7 @@ from blueprints.auth import auth
 from blueprints.user_stats import user_stats
 from blueprints.deposit import deposit
 from blueprints.getCrypto import getCrypto_bp
-from blueprints.transactionCrypto import transactionCrypto_bp
+from blueprints.transactionCrypto import transactionCrypto_bp, obradaTransakcije
 from blueprints.getTransactions import getTransactions_bp
 from flask_cors import CORS
 from db_config import *
@@ -22,5 +22,6 @@ app.register_blueprint(getTransactions_bp)
 CORS(app)
 
 if __name__ == "__main__":
+    #app.run(host='0.0.0.0', port=5001, debug=True)
     app.run(host='0.0.0.0', port=5001, debug=True)
     

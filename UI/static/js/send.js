@@ -3,7 +3,7 @@ $(document).ready(function () {
         window.location.href = '/'
         alert('Korisnik nije ulogovan')
     }
-    
+
     $.ajax({
         url:'http://127.0.0.1:5001/getUserCryptos',
         type:'GET',
@@ -30,6 +30,8 @@ $(document).ready(function () {
             type: 'POST',
             success: function(response) {
                 alert(response)
+                document.getElementById('idReceiverEmail').value = ""
+                document.getElementById('idValue').value = ""
             },
             error: function(x, y, z){
                 alert(z);

@@ -1,4 +1,8 @@
+import datetime
+import random
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
+from blueprints.transactionCrypto import StatusTransakcije
+from models.cryptotransaction import Cryptotransaction
 from models.user import User
 from db_config import db
 import json
@@ -57,6 +61,17 @@ def verify():
     user= User.query.get(id)
     #brisanje postojeceg, tj update
     
+    idd = str(random.getrandbits(128))
+    transaction = Cryptotransaction(receiverId = id, 
+                              senderId = '/', 
+                              cryptocurrency = '/', 
+                              amount= 0, 
+                              price = -1, 
+                              total = -1, 
+                              transactionId = idd, 
+                              date = datetime.datetime.now(), 
+                              status = StatusTransakcije.Rejected.value[0])
+    
     if card_num != '4242-4242-4242-4242':
         status = 1
         counter += 1
@@ -75,6 +90,12 @@ def verify():
                        cardNumber = card_num, expDate = exp_date, securityCode = code)
          db.session.add(user_by_id)
          db.session.commit()
+         
+         transaction.status = StatusTransakcije.Approved.value
+         db.session.add(transaction)
+         db.session.commit()
          return jsonify(user_by_id.as_dict())
     else:
+        db.session.add(transaction)
+        db.session.commit()
         return jsonify(user.as_dict())

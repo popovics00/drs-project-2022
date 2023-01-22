@@ -10,6 +10,7 @@ from models.usercrypto import Usercrypto
 from models.user import User
 from models.cryptotransaction import Cryptotransaction
 
+
 class StatusTransakcije(Enum):
     Processing = 0,
     Rejected = 1,
@@ -91,6 +92,17 @@ def confirmConversion():
     allWalletsMyUser = [] #svi walleti od datog korisnika
     postojiWallet = False
     
+    idd = str(random.getrandbits(128))
+    transaction = Cryptotransaction(receiverId = id, 
+                              senderId = '/', 
+                              cryptocurrency = allCryptos, 
+                              amount = inputConvertAmount, 
+                              price = cryptoValue, 
+                              total = float(inputConvertAmount) * float(cryptoValue), 
+                              transactionId = idd, 
+                              date = datetime.datetime.now(), 
+                              status = StatusTransakcije.Rejected.value[0])
+    
     #prolazimo kroz listu svih walleta i odvajamo one koji odgovaraju nasem korisniku
     for c in allWallets:
         if(c.userId == id):
@@ -100,13 +112,19 @@ def confirmConversion():
             if(c.cryptocurrency == allCryptos):
                 valutaUKojuMenjamo = c
                 postojiWallet = True
-
-    if(valutaKojuMenjamo.balance < float(inputConvertAmount)): #nema dovoljno da bi promenio
-        return jsonify('Nemate dovoljno date valute.')
-    
+                
     kolikoVrediMoje = float(inputConvertAmount) * float(myCryptoValue)
     kolicinaNoveValute = kolikoVrediMoje / float(cryptoValue)
+    
+    transaction.amount = kolicinaNoveValute
+    transaction.price = cryptoValue
+    transaction.total = kolikoVrediMoje
 
+    if(valutaKojuMenjamo.balance < float(inputConvertAmount)): #nema dovoljno da bi promenio
+        db.session.add(transaction)
+        db.session.commit()
+        return jsonify('Nemate dovoljno date valute.')
+    
     #oduzimamo onoliko koliko smo promenili
     valutaKojuMenjamo.balance -= float(inputConvertAmount)
     if(valutaKojuMenjamo.balance == 0): #ako smo sve izmenili samo obrisemo wallet
@@ -120,21 +138,27 @@ def confirmConversion():
         valutaUKojuMenjamo.balance += kolicinaNoveValute
         db.session.add(valutaUKojuMenjamo)
         db.session.commit()
+        
+        transaction.status = StatusTransakcije.Approved.value
+        db.session.add(transaction)
+        db.session.commit()
     else: #ako ne postoji dodavmo novi
         newCrypto = Usercrypto(userId = id, cryptocurrency = allCryptos, balance = float(kolicinaNoveValute))
         try:
             db.session.add(newCrypto)
+            db.session.commit()
+            
+            transaction.status = StatusTransakcije.Approved.value
+            db.session.add(transaction)
             db.session.commit()
         except Exception as e:
             return jsonify(e), 400
 
     return jsonify("Uspesna transakcija.")
 
-
-
 #FUNKCIJA THREAD KOJA TRANSAKCIJU APPROVA I VRSI PRENOS VALUTE AKO SU USLOVI OK
 def obradaTransakcije():
-    Timer(0.2, obradaTransakcije, []).start() #timer pocinje da broji 20sekundi jer je 5minuta dugo pa da ne cekamo dzabe
+    Timer(0.5, obradaTransakcije, []).start() #timer pocinje da broji 20sekundi jer je 5minuta dugo pa da ne cekamo dzabe
     transakcije = Cryptotransaction.query.all() #lista transakcija
     db.session.remove()
     wallets = Usercrypto.query.all() #lista walleta
@@ -144,7 +168,7 @@ def obradaTransakcije():
 
 
     for t in transakcije: # prolazimo kroz listu transakcija kako bi nasli transakciju koja treba da se approva
-        if t.status == 0 and t.date + timedelta(minutes = 0.2)  < datetime.datetime.today():        
+        if t.status == 0 and t.date + timedelta(minutes = 0.5)  < datetime.datetime.today():        
             korisnikPostoji = False
             wallet = object
 
@@ -182,6 +206,9 @@ def obradaTransakcije():
                         db.session.commit()
                     if wa.userId == t.senderId and wa.cryptocurrency == t.cryptocurrency: #ovde smo samo oduzeli od sendera
                         wa.balance -= t.amount
+                        if(wa.balance == 0): #ako posaljemo sve sto imamo iz neke valute, da se obrise iz baze
+                            db.session.delete(wa)
+                            db.session.commit()
                         db.session.add(wa)
                         db.session.commit()
 
@@ -192,15 +219,11 @@ def obradaTransakcije():
                     
                     db.session.add(newUserCrypto)
                     db.session.commit()
-
-
-
+    
 #POKRETANJE THREADA ZA APPROVE
 @transactionCrypto_bp.before_app_first_request
 def threadStart():
-     obradaTransakcije()
-
-
+    obradaTransakcije()
 
 #POZIVAMO JE KAO PROCES
 def pravljenjeTransakcije(senderId, receiverId, crypto, url, amount):

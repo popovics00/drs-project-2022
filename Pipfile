@@ -14,6 +14,7 @@ flask-mysql = "*"
 flask-marshmallow = "*"
 docker = "*"
 docker-compose = "*"
+flask-socketio = "*"
 
 [dev-packages]
 

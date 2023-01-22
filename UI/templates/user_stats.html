@@ -125,37 +125,25 @@
 </div>
 <br><br><br>
 <div class="row">
-    <h3>My transactions</h3>
     <div style="overflow-x:auto;">
         <table id="tableTransactions" class="table table table-striped" style="margin-bottom: 0%;">
-            <tr>
-              <th colspan="9" style="text-align: center; vertical-align: middle;">
-                My Transactions
-                <span style="float: right;">
-                  <button id="idFilterTransactions" class="btn btn-dark">Filter</button>
-                  <button id="idSortTransactions" class="btn btn-dark">Sort</button>
-                </span>
-              </th>
-            </tr>
             <div id="divSort">
-                <tr id="trSort" style="display: none;">
+                <tr id="trSort">
                   <td colspan="4"> 
-                    <label for="sortByValue">Sort by:</label>
-                    <input list="sortBy" id="sortByValue" name="sortByName" />
-                    <datalist id="sortBy">
+                    <label for="sortBy">Sort by:</label>
+                    <select name="sortBy" id="sortBy">
                       <option value="Amount">Amount</option>
                       <option value="Price">Price</option>
                       <option value="Total">Total</option>
                       <option value="Date">Date</option>
-                    </datalist> 
+                    </select> 
                   </td>
                   <td colspan="4">
-                    <label for="sortAscDescValue">Asc/Desc</label>
-                    <input list="sortAscDesc" id="sortAscDescValue" name="sortAscDescName" />
-                    <datalist id="sortAscDesc">
-                      <option value="Ascending"></option>
-                      <option value="Descending"></option>
-                    </datalist> 
+                    <label for="sortAscDesc">Asc/Desc</label>
+                    <select name="sortAscDesc" id="sortAscDesc">
+                      <option value="Ascending">Ascending</option>
+                      <option value="Descending">Descending</option>
+                    </select> 
                   </td>
                   <td>
                     <button id="buttonSortTransactions" class="btn btn-light">Sort</button>
@@ -163,7 +151,7 @@
                 </tr>
             </div>
             <div id="divFilter">
-              <tr id="trFilter" style="display: none;">
+              <tr id="trFilter">
                 <td> 
                   <label for="filterCrypto">Crypto</label>
                   <select id="filterCrypto" name="filterCrypto">
@@ -211,8 +199,8 @@
                   <select id="filterStatus" name="filterStatus">
                     <option value=""></option>
                     <option value="SUCCESS">Approved</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Processing">Processing</option>
+                    <option value="REJECTED">Rejected</option>
+                    <option value="PROCESSING">Processing</option>
                   </select>
                 </td>
                 <td>

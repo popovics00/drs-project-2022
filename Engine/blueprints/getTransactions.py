@@ -33,12 +33,12 @@ def getMyTransactions():
 def filterTransactions():
     id = request.form["id"]
 
-    transactionsTemp = Cryptotransaction.query.all()
-    transakcije = [] #transakcije korisnika
-    for t in transactionsTemp:
-        if t.senderId == id or t.senderId == id:
-             transakcije.append(t.to_json())
-    
+    listaTransakcija = [] #lista transakcija koje su naseg korisnika
+    transactions = Cryptotransaction.query.all()
+    for t in transactions:
+        if t.receiverId == id or t.senderId == id:
+            listaTransakcija.append(t.to_json())
+ 
     #pribavljanje parametara
     filterCrypto = request.form["filterCrypto"]
     filterAmountFrom = request.form["filterAmountFrom"]
@@ -53,6 +53,39 @@ def filterTransactions():
     filterDateTo = request.form["filterDateTo"]
     filterStatus = request.form["filterStatus"]
 
+    if(filterCrypto != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['cryptocurrency'] == filterCrypto]
+    
+    if(filterAmountFrom != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['amount'] >= float(filterAmountFrom)]
+    
+    if(filterAmountTo != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['amount'] <= float(filterAmountTo)]
+    
+    if(filterPriceFrom != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['price'] >= float(filterPriceFrom)]
+    
+    if(filterPriceTo != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['price'] <= float(filterPriceTo)]
+    
+    if(filterTotalFrom != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['total'] >= float(filterTotalFrom)]
+    
+    if(filterTotalTo != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['total'] <= float(filterTotalTo)]
+    
+    if(filterSender != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['senderId'] == filterSender]
+    
+    if(filterReceiver != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['receiverId'] == filterReceiver]
+    
+    if(filterDateFrom != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['date'] >= datetime.datetime.strptime(filterDateFrom, '%Y-%m-%d')]
+    
+    if(filterDateTo != "0"):
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['date'] <= datetime.datetime.strptime(filterDateTo, '%Y-%m-%d')]
+    
     if(filterStatus == "SUCCESS"): 
         filterStatus = 2
     elif(filterStatus == "REJECTED"): 
@@ -60,35 +93,14 @@ def filterTransactions():
     elif(filterStatus == "PROCESSING"): 
         filterStatus = 0
 
-    if(filterCrypto != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['cryptocurrency'] == filterCrypto]
-    if(filterPriceFrom != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['price'] >= float(filterPriceFrom)]
-    if(filterPriceTo != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['price'] <= float(filterPriceTo)]
-    if(filterTotalFrom != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['total'] >= float(filterTotalFrom)]
-    if(filterTotalTo != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['total'] <= float(filterTotalTo)]
-    if(filterAmountFrom != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['amount'] >= float(filterAmountFrom)]
-    if(filterAmountTo != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['amount'] <= float(filterAmountTo)]
-    if(filterDateFrom != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['date'] >= datetime.datetime.strptime(filterDateFrom, '%Y-%m-%d')]
-    if(filterDateTo != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['date'] <= datetime.datetime.strptime(filterDateTo, '%Y-%m-%d')]
-    if(filterSender != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['senderId'] == filterSender]
-    if(filterReceiver != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['receiverId'] == filterReceiver]
     if(filterStatus != "0"):
-        transakcije[:] = [transaction for transaction in transakcije if transaction['status'] == filterStatus]
+        listaTransakcija[:] = [transaction for transaction in listaTransakcija if transaction['status'] == filterStatus]
+        return jsonify(listaTransakcija)
 
-    if len(transakcije) != 0:
-        return jsonify(transakcije)
+    if len(listaTransakcija) == 0:
+        return jsonify("You have no transactions that correspond to that filter!")
     else:
-        return jsonify("Nemamo transakcija koje mozemo filtrirati!")
+        return jsonify(listaTransakcija)
 
 
 #SORITRANJE TRANSAKCIJA
